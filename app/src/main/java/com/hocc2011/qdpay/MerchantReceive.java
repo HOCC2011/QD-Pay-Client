@@ -1,5 +1,6 @@
 package com.hocc2011.qdpay;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -60,7 +61,12 @@ public class MerchantReceive extends AppCompatActivity {
             result -> {
                 if(result.getContents() != null) {
                     String scannedToken = result.getContents();
-                    String amount = amountInput.getText().toString();
+                    String amount;
+                    if (!amountInput.getText().toString().equals("")) {
+                        amount = amountInput.getText().toString();
+                    } else {
+                        amount = "0";
+                    }
 
                     if(amount.isEmpty()) {
                         Toast.makeText(this, "Enter amount first!", Toast.LENGTH_SHORT).show();
@@ -103,27 +109,19 @@ public class MerchantReceive extends AppCompatActivity {
 
             int code = conn.getResponseCode();
             runOnUiThread(() -> {
-                if (code == 200) Toast.makeText(this, "Payment Success!", Toast.LENGTH_LONG).show();
+                if (code == 200) {
+                    //Toast.makeText(this, "Payment Success!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(this, SuccessView.class);
+                    startActivity(intent);
+                }
                 else Toast.makeText(this, "Payment Failed: " + code, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
             });
 
         } catch (Exception e) {
             e.printStackTrace();
             runOnUiThread(() -> Toast.makeText(this, "Network Error", Toast.LENGTH_SHORT).show());
         }
-    }
-
-    // ==========================================
-    // UTILITIES
-    // ==========================================
-    private String hmacSha256(String data, String key) throws Exception {
-        Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-        mac.init(secretKeySpec);
-        byte[] bytes = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) sb.append(String.format("%02x", b));
-        return sb.toString();
     }
 }

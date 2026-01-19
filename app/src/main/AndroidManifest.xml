@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QDPay">
         <activity
+            android:name=".SuccessView"
+            android:exported="false" />
+        <activity
             android:name=".DataConfig"
             android:exported="false" />
         <activity

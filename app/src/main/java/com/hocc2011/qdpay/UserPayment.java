@@ -1,5 +1,6 @@
 package com.hocc2011.qdpay;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +38,7 @@ public class UserPayment extends AppCompatActivity {
     ImageView qrImage;
     TextView refresh;
     boolean refreshButtonEnabled = true;
+    boolean alreadyDisplayed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,12 @@ public class UserPayment extends AppCompatActivity {
                 }.start();
             }
         });
+
+        findViewById(R.id.back).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
+
         qrImage = findViewById(R.id.img_qr);
         generateUserQR();
     }
@@ -117,36 +127,49 @@ public class UserPayment extends AppCompatActivity {
 
     private void startStatusPolling(String token) {
         new Thread(() -> {
-            boolean isProcessed = false;
-            int attempts = 0;
+            try {
+                URL url = new URL(SERVER_URL + "/transaction/status?token=" + token);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(3000);
+                conn.setReadTimeout(3000);
 
-            // Poll every 2 seconds for up to 1 minute
-            while (!isProcessed && attempts < 30) {
-                try {
-                    Thread.sleep(2000);
-                    URL url = new URL(SERVER_URL + "/transaction/status?token=" + token);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-                    var response = new String(conn.getInputStream().readAllBytes());
-                    if (response.equals("SUCCESS")) {
-                        isProcessed = true;
-                        runOnUiThread(() -> SuccessView());
-                    }
-                    attempts++;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line;
+                StringBuilder response = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
                 }
+
+                Log.d("Response", response.toString());
+
+                if (response.toString().equals("SUCCESS")) {
+                    runOnUiThread(() -> {
+                        if (alreadyDisplayed == false) {
+                            SuccessView();
+                            alreadyDisplayed = true;
+                        }
+                    });
+                } else {
+                    Thread.sleep(3500);
+                    startStatusPolling(token);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
     }
 
     private void SuccessView() {
         Log.d("Log", "Payment Successful");
+        /*
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Payment Successful")
                 .setMessage("You have successfully paid the merchant.")
                 .setPositiveButton("OK", null)
                 .show();
+         */
+        Intent intent = new Intent(this, SuccessView.class);
+        startActivity(intent);
     }
 
     private String hmacSha256(String data, String key) throws Exception {
