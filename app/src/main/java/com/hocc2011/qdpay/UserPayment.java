@@ -32,8 +32,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class UserPayment extends AppCompatActivity {
 
     // --- Configuration ---
-    private static final String SHARED_SECRET = "super_secure_shared_secret_key"; // Must match server
-    private static final String SERVER_URL = "http://192.168.50.139:8000";
+    private static String SHARED_SECRET = "";
+    private static String SERVER_URL;
     private static String AccountID = "";
     ImageView qrImage;
     TextView refresh;
@@ -51,8 +51,11 @@ public class UserPayment extends AppCompatActivity {
             return insets;
         });
 
+        SERVER_URL = this.getSharedPreferences("NetworkData", MODE_PRIVATE).getString("URL", "1.1.1.1");
+
         SharedPreferences pref = this.getSharedPreferences("AppData", MODE_PRIVATE);
         AccountID = pref.getString("AccountID", "");
+        SHARED_SECRET = pref.getString("sharedSecret", "");
 
         new CountDownTimer(3000, 1000) {
             public void onTick(long millisUntilFinished) {

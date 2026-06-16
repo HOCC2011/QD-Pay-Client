@@ -29,7 +29,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class MerchantReceive extends AppCompatActivity {
 
-    private static final String SERVER_URL = "http://192.168.50.139:8000"; // 10.0.2.2 is localhost for Android Emulator
+    private static String SERVER_URL;
     private static String AccountID = "";
     private EditText amountInput;
 
@@ -43,6 +43,8 @@ public class MerchantReceive extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SERVER_URL = this.getSharedPreferences("NetworkData", MODE_PRIVATE).getString("URL", "1.1.1.1");
 
         SharedPreferences pref = this.getSharedPreferences("AppData", MODE_PRIVATE);
         AccountID = pref.getString("AccountID", "");

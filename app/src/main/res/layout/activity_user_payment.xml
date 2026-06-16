@@ -59,6 +59,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon"
+                android:scaleType="fitCenter"
+                app:layout_constraintTop_toTopOf="@id/img_qr"
+                app:layout_constraintBottom_toBottomOf="@id/img_qr"
+                app:layout_constraintStart_toStartOf="@id/img_qr"
+                app:layout_constraintEnd_toEndOf="@id/img_qr"/>
+
             <TextView
                 android:id="@+id/refresh"
                 android:layout_width="wrap_content"

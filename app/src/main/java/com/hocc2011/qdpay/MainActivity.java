@@ -1,6 +1,5 @@
 package com.hocc2011.qdpay;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +16,8 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SERVER_URL = "http://192.168.50.139:8000";
+    private static String configIpAndPort = "192.168.50.82:4800";
+    private static String SERVER_URL;
     private static String AccountID = "";
     TextView balance;
 
@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        this.getSharedPreferences("NetworkData", MODE_PRIVATE).edit().putString("URL", "http://" + configIpAndPort).apply();
+
+        SERVER_URL = this.getSharedPreferences("NetworkData", MODE_PRIVATE).getString("URL", "1.1.1.1");
 
         SharedPreferences pref = this.getSharedPreferences("AppData", MODE_PRIVATE);
         AccountID = pref.getString("AccountID", "");
