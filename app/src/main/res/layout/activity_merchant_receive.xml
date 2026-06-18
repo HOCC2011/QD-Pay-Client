@@ -5,20 +5,33 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MerchantReceive">
+    tools:context=".MerchantReceive"
+    android:background="#8eff3d">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/back"/>
 
     <LinearLayout
         android:id="@+id/layout_merchant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/back">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Merchant Terminal"
-            android:textSize="18sp"
+            android:text="Receive Money"
+            android:textSize="18dp"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <EditText
@@ -26,6 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@drawable/background"
+            android:padding="16dp"
             android:hint="Enter Amount (e.g. 25.00)"
             android:inputType="numberDecimal" />
 
@@ -35,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:padding="16dp"
-            android:backgroundTint="#2E7D32"
+            android:backgroundTint="#ae3dff"
             android:text="Open Scanner"
             android:textColor="#FFFFFF" />
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.hocc2011.qdpay;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private static String AccountID = "";
     TextView balance;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences pref = this.getSharedPreferences("AppData", MODE_PRIVATE);
         AccountID = pref.getString("AccountID", "");
+
+        TextView AccountIDView = findViewById(R.id.AccountID);
+        AccountIDView.setText("AccountID: " + AccountID);
 
         findViewById(R.id.btn_mode_user).setOnClickListener(v -> {
             Intent intent = new Intent(this, UserPayment.class);

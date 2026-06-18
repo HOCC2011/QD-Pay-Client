@@ -54,6 +54,10 @@ public class MerchantReceive extends AppCompatActivity {
 
         amountInput = findViewById(R.id.input_amount);
 
+        findViewById(R.id.back).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
     }
 
     // ==========================================
